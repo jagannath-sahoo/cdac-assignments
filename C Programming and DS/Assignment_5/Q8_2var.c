@@ -23,7 +23,7 @@ int main()
                 scanf("%d",&mat1[i]);//{a1,b1,c1}
 	}
 
-	printf("2nd Eq. Enter values in {a1,b1,c1} format\n");
+	printf("2nd Eq. Enter values in {a2,b2,c2} format\n");
 
 	for(int i = 0; i < col; i++)
         {
