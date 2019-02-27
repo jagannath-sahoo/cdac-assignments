@@ -1,8 +1,6 @@
 
-/*Q5. Transpose of a Matrix*/
+/*Q10. check identity matrix*/
 #include<stdio.h>
-
-#define DEBUG
 
 #ifdef DEBUG
 # define DEBUG_PRINT(x) printf(x);
@@ -10,12 +8,12 @@
 # define DEBUG_PRINT(x) do {} while (0)
 #endif
 
-//void swap(int *x, int *y);
+
 void displayMat(int (*mat)[3],int col, int row);
 
 int main()
 {
-	int row=3,col=3, temp = 0;
+	int row=3,col=3, count = 0;
 	int mat1[3][3], tranMat[3][3];
 	//initialize matrix
 	for(int i = 0; i < col; i++)
@@ -27,21 +25,29 @@ int main()
                 }
 	}
 
-	//Transpose
 	for(int i = 0; i < col; i++)
         {
                 for(int j = 0; j < row;j++)
                 {
-			if(i < j){
-				temp = mat1[j][i];
-		        	mat1[j][i] = mat1[i][j];
-				mat1[i][j] = temp;
-				
+                        //printf("[%d][%d]:%d ",i,j,mat[i][j]);
+                        //scanf("%d",&mat1[i][j]);
+			if((mat1[i][j] == 1))
+			{
+				count++;
+			}
+			if((mat1[i][j] == 0))
+			{
+				count++;
 			}
                 }
-      }
-	//Display
-	displayMat(mat1,row,col);
+                printf("\n");
+        }
+//	printf("\n****%d***\n",count);
+	displayMat(mat1,3,3);
+	if(count == 9)
+		printf("Identity Matrix\n");
+	else
+		printf("Not an Indentity matrix");
 	return 0;
 }
 
@@ -58,4 +64,3 @@ void displayMat(int (*mat)[3],int col, int row)
         }
 
 }
-
