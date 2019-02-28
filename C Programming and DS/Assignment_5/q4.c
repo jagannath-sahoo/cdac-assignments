@@ -53,9 +53,10 @@ int main()
 	for(int i = 0; i < row; i++)
 	{
 		for(int j = 0; j < col; j++){
+			mulMat[i][j] = 0;
 			for(int k = 0; k < 3; k++)
 			{
-				mulMat[i][j] = mat1[i][k] * mat2[k][j];
+				mulMat[i][j] = mulMat[i][j] + (mat1[i][k] * mat2[k][j]);
 				/*Logic for multiplication*/
 			}
 		}
@@ -68,7 +69,7 @@ int main()
 	printf("Substraction of 2 Matrix\n");
         displayMat(subMat,3,3);
 	printf("Multiplication of 2 Matrix\n");
-        displayMat(sumMat,3,3);
+        displayMat(mulMat,3,3);
 
 	return 0;
 }
