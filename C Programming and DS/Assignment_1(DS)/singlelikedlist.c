@@ -15,9 +15,12 @@ void insertAtPosition(node **,int val, int position);
 int deleteAtFirst(node **);
 int deleteAtPosition(node **, int pos);
 int deleteAtEnd(node **);
+int findElement(node **, int);
+void reverse(node **p,node **rp);
 int main()	
 {
-	node *head = NULL; 
+	node *head = NULL;
+       node *rHead = NULL;	
 	insertAtEnd(&head,12);	
 	insertAtEnd(&head,13);	
 	insertAtEnd(&head,14);	
@@ -26,27 +29,94 @@ int main()
 	display(head);
 	insertAtPosition(&head,144,3);
 	display(head);
-	printf("Deleted: %d",deleteAtFirst(&head));
+	//printf("Deleted: %d",deleteAtFirst(&head));
+	//display(head);
+	//printf("Deleted: %d",deleteAtPosition(&head,3));
+	//display(head);
+	//deleteAtEnd(&head);
+	//display(head);
+
+	printf("---------------\n");
+	printf("Deleted Node: %d\n",deleteAtEnd(&head));
 	display(head);
-	printf("Deleted: %d",deleteAtPosition(&head,3));
-	display(head);
-	deleteAtEnd(&head);
-	display(head);
+
+	printf("---------------\n");
+	printf("Location found: %d",findElement(&head,12));
+	reverse(&head,&rHead);
+	display(rHead);
+
+	//display(&rHead);
 	return 0;
+}
+
+
+void reverse(node **p,node**rp)
+{
+	node *pre_node,*curr_node;
+	node *temp = *p;
+	if(*p != NULL)
+	{
+		pre_node = temp;
+		curr_node = temp->next;
+		temp = temp->next;
+		pre_node->next = NULL;//Make it as first node
+	}
+	while(temp != NULL)
+	{
+
+		temp = temp->next;
+		curr_node->next = pre_node;
+		
+		pre_node = curr_node;
+		curr_node = temp;
+	}
+	temp = pre_node;
+	*rp = temp;
+}
+
+int findElement(node **p, int elementVal)
+{
+	node *temp = *p;
+	int count = 0;
+	while(temp != 0)
+	{
+		count++;
+		if(temp->data == elementVal)
+		{
+			printf("Element Found At: %d Node\n",count);
+			return(count);
+		}
+		temp = temp->next;
+	}
+	return -1;
+
 }
 
 int deleteAtEnd(node **p)
 {
-	node *temp = *p;
-	node *t1;
-	int ret = 0;
-	while( temp != NULL)
+	if(*p == NULL)
 	{
-		t1 = temp;
-		temp= temp->next;
+		printf("Empty Linked List\n");
+		return -1;
+	}
+
+	node *temp = *p;
+	
+	node *pre_node = *p;
+	
+	int ret = 1;
+
+	while( temp->next != NULL)
+	{
+		pre_node  = temp;
+		temp = temp->next;	
 	}
 	ret = temp->data;
-	t1->next = temp->next;
+	if(temp == *p)
+		*p = NULL;
+	else
+		pre_node->next = NULL;
+
 	free(temp);
 	return ret;
 	
