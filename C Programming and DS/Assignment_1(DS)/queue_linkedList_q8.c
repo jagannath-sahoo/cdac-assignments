@@ -30,15 +30,15 @@ int main()
 	enqueue(&front,&rear,50);
 	display(front,rear);
 
-	printf("DELETED: %d\n",dequeue(&front,&rear));
-	display(front,rear);
+//	printf("DELETED: %d\n",dequeue(&front,&rear));
+//	display(front,rear);
 	
-	printf("DELETED: %d\n",dequeue(&front,&rear));
+//	printf("DELETED: %d\n",dequeue(&front,&rear));
 	//display(front,rear);
 	return 0;
 }
 
-
+/*
 int dequeue(QUEUE_t **f, QUEUE_t **r)
 {
 	int ret;
@@ -61,10 +61,25 @@ int dequeue(QUEUE_t **f, QUEUE_t **r)
 		printf("Underflow\n");
 	}
 }
-
+*/
 void enqueue(QUEUE_t **f, QUEUE_t **r, int val)
 {
-	if(count <= QUEUE_SIZE)
+	QUEUE_t *temp = (QUEUE_t *) calloc(1, sizeof(QUEUE_t));
+        temp->data = val;
+        temp->next = NULL;
+	
+	if(*r == NULL)
+	{
+		count++;
+		*r = temp;
+		*f = temp;
+	}
+	else{
+		temp->next = *r;
+		*r = temp;
+	}
+
+	/*if(count <= QUEUE_SIZE)
 	{
 		count++;
 		QUEUE_t *temp = (QUEUE_t *) calloc(1, sizeof(QUEUE_t));
@@ -83,7 +98,7 @@ void enqueue(QUEUE_t **f, QUEUE_t **r, int val)
 	}
 	else{
 		printf("Overflow\n");
-	}
+	}*/
 
 }
 

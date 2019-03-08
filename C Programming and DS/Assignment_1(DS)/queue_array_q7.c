@@ -16,6 +16,10 @@ int main()
 	enqueue(queue,&front,&rear,10);
 	enqueue(queue,&front,&rear,20);
 	enqueue(queue,&front,&rear,30);
+	enqueue(queue,&front,&rear,40);
+	enqueue(queue,&front,&rear,50);
+	printf("The deleted element is %d\n",dequeue(queue,&front,&rear));
+	enqueue(queue,&front,&rear,60);
 	displayQ(queue,&front,&rear);
 	printf("The deleted element is %d\n",dequeue(queue,&front,&rear));
 	displayQ(queue,&front,&rear);
