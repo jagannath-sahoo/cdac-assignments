@@ -14,7 +14,7 @@ j) Whether a string starts or ends with a particular sub string
  * */
 
 #include<stdio.h>
-
+#include<stdlib.h>
 
 
 /*
@@ -54,13 +54,21 @@ char* conCat(char *, char *);
  *	return : reverse src string
  **/  
 char* reverse(char*,char*);
+/*
+ * Find the substring
+ * parms: const type char string
+ * 	  lower index
+ * 	  higher index
+ * 	  buffer storage for returning value
+ * */
+char* subString(const char *str, int low, int high,char *strBuf);
 
-
+int checkSubstring(const char *str,const char *subString);
 int main()
 {
 	//char str1[64] = { 0 };
 	//char str2[64] = { 0 };
-	char str[64] = "CDAC";
+	char str[64] = "CDAC,Acts-Pune";
 	char buf[64] ={0};
 	//printf("%s",str);
 	//printf("Enter the string\n");
@@ -71,10 +79,42 @@ int main()
 	//printf("Concate \"%s\" and \"Acts\":\n %s", str,conCat(str,"Acts"));
 	//printf("Reversed string of %s is %s",str,reverse(buf,str));
 	
-	printf("Occurance of %c in %s\n Index: %d",'C', "CDAC",findChar("CDAC",'C'));
+	//printf("Occurance of %c in %s\n Index: %d",'C', "CDAC",findChar("CDAC",'C'));
+	printf("Enter Sub-String of %s is:\n %s\n",str,subString(str,1,4,buf));
+	checkSubstring(str,buf);
 	return 0;
 }
 
+int checkSubstring(const char *str, const char *substring)
+{
+	int strLenStr = strLen(str);
+	int strSubLen = strLen(substring);
+	int blockSize = strLenStr/strSubLen;
+	int low = 0,high = blockSize;
+	char *temp = (char *)calloc(blockSize,sizeof(char));
+	for(int i = 0; i < blockSize;i++)
+	{
+		subString(str,low+i,high,temp);
+		printf("%s\n",temp);
+		low = high+blockSize;
+		high = high+blockSize;
+	}
+	free(temp);
+	
+}
+
+
+
+char* subString(const char *str, int low, int high, char *strBuf){
+	static int i=0;
+	if(low<=high)
+	{
+		*(strBuf+i) = *(str+low);
+		i++;
+		subString(str,low+1,high,strBuf);
+	}
+	return strBuf;
+}
 
 char* copying(char *dest,const char *src)
 {
