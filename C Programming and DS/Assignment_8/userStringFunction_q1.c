@@ -80,8 +80,8 @@ int main()
 	//printf("Reversed string of %s is %s",str,reverse(buf,str));
 	
 	//printf("Occurance of %c in %s\n Index: %d",'C', "CDAC",findChar("CDAC",'C'));
-	printf("Enter Sub-String of %s is:\n %s\n",str,subString(str,1,4,buf));
-	checkSubstring(str,buf);
+	//printf("Enter Sub-String of %s is:\n %s\n",str,"Acts");
+	printf("Check flag = %d",checkSubstring(str,"Acts"));
 	return 0;
 }
 
@@ -91,16 +91,28 @@ int checkSubstring(const char *str, const char *substring)
 	int strSubLen = strLen(substring);
 	int blockSize = strLenStr/strSubLen;
 	int low = 0,high = blockSize;
-	char *temp = (char *)calloc(blockSize,sizeof(char));
-	for(int i = 0; i < blockSize;i++)
+	int matchedIndex = 0;
+	int foundFlag = 0;//0 for not found 1 for found
+	for(int i = 0; i< strLen(str);i++)
 	{
-		subString(str,low+i,high,temp);
-		printf("%s\n",temp);
-		low = high+blockSize;
-		high = high+blockSize;
+		if(str[i] == substring[0])
+		{
+			matchedIndex = i;
+			for(int j=0;j<strLen(substring);j++)
+			{
+				if(str[matchedIndex++] != substring[j])
+				{
+					foundFlag = 0;
+					break;
+				}
+				else
+				{
+					foundFlag = 1;
+				}
+			}
+		}
 	}
-	free(temp);
-	
+	return foundFlag;
 }
 
 
