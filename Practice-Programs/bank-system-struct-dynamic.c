@@ -20,7 +20,7 @@ int deposit(USER_st *data);
 
 int main()
 {
-	USER_st data[20];
+	USER_st *data = NULL;// = (USER_st *)calloc(1,sizeof(USER_st));
 	int searchIndex = 0;
 	int recordCount = 0;
 	char name[20];
@@ -35,11 +35,14 @@ int main()
 		switch(ch){
 			case 1:
 				CLEAR;
+			//	recordCount++;
+				data = (USER_st * )realloc(data,sizeof(USER_st)*1);
 				printf("Enter Account no. : Name : Balance\n");
 			       	scanf("%u %[^\n]s",&accNo,name);
 				__fpurge(stdin);
 				scanf("%f",&bal);
-				createAccount(&data[recordCount++],&accNo,name,&bal);
+					
+				createAccount((data+recordCount++),&accNo,name,&bal);
 				break;
 			case 2:
 				CLEAR;
@@ -51,10 +54,17 @@ int main()
 				printf("Enter the account no.\n");
 				scanf("%u",&accNo);
 				searchIndex = search(data,accNo);
+				if(searchIndex >= 0)
+				{
 				//printf("Record Index: %d\n",search(data,accNo));
 				printf("Account no.: %d\n",data[searchIndex].accountNo);
 				printf("Name: %s\n",data[searchIndex].name);
 				printf("Balance: %f\n",data[searchIndex].balance);
+				}
+				else{
+					printf("NOT FOUND!\n");
+				}
+
 				break;
 			case 4: 
 				CLEAR;
