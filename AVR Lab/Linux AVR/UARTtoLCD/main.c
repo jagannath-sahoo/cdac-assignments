@@ -89,9 +89,11 @@ int main(void)
 		/*ch = uart1Receive();*/
 		_delay_ms(20);
 		uart1Send(ch);
-        if((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9'))
+        if((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || (ch == ' '))
             lcdData(ch);
 		//sendString(buff);
+		lcdCmd(0x18);
+		_delay_ms(250);	
     }
 }
 
