@@ -1,0 +1,198 @@
+
+UART.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00800100  00800100  0000017a  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00000126  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .comment      00000030  00000000  00000000  0000017a  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001ac  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000038  00000000  00000000  000001e8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000938  00000000  00000000  00000220  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 0000086b  00000000  00000000  00000b58  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000033a  00000000  00000000  000013c3  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000054  00000000  00000000  00001700  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000413  00000000  00000000  00001754  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000066  00000000  00000000  00001b67  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000028  00000000  00000000  00001bcd  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 46 00 	jmp	0x8c	; 0x8c <__ctors_end>
+   4:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+   8:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+   c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  10:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  14:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  18:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  1c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  20:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  24:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  28:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  2c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  30:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  34:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  38:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  3c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  40:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  44:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  48:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  4c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  50:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  54:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  58:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  5c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  60:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  64:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  68:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  6c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  70:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  74:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  78:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  7c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  80:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  84:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  88:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+
+0000008c <__ctors_end>:
+  8c:	11 24       	eor	r1, r1
+  8e:	1f be       	out	0x3f, r1	; 63
+  90:	cf ef       	ldi	r28, 0xFF	; 255
+  92:	d0 e1       	ldi	r29, 0x10	; 16
+  94:	de bf       	out	0x3e, r29	; 62
+  96:	cd bf       	out	0x3d, r28	; 61
+  98:	0e 94 75 00 	call	0xea	; 0xea <main>
+  9c:	0c 94 91 00 	jmp	0x122	; 0x122 <_exit>
+
+000000a0 <__bad_interrupt>:
+  a0:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000a4 <uartInit>:
+}
+
+void uartInit()
+{
+	//9600
+	UBRR1H = ((UBRR_VALUE) >> 8);
+  a4:	10 92 98 00 	sts	0x0098, r1	; 0x800098 <__TEXT_REGION_LENGTH__+0x7e0098>
+	UBRR1L = UBRR_VALUE;
+  a8:	87 e6       	ldi	r24, 0x67	; 103
+  aa:	80 93 99 00 	sts	0x0099, r24	; 0x800099 <__TEXT_REGION_LENGTH__+0x7e0099>
+	//Enable Rx and Tx
+	UCSR1B |= (1<<RXEN1) | (1<<TXEN1);
+  ae:	ea e9       	ldi	r30, 0x9A	; 154
+  b0:	f0 e0       	ldi	r31, 0x00	; 0
+  b2:	80 81       	ld	r24, Z
+  b4:	88 61       	ori	r24, 0x18	; 24
+  b6:	80 83       	st	Z, r24
+	//stop bit 1, No Parity
+	UCSR1C &= ~(1<<USBS0) & ~(1<<UPM11) & ~(1<<UPM10);
+  b8:	ed e9       	ldi	r30, 0x9D	; 157
+  ba:	f0 e0       	ldi	r31, 0x00	; 0
+  bc:	80 81       	ld	r24, Z
+  be:	87 7c       	andi	r24, 0xC7	; 199
+  c0:	80 83       	st	Z, r24
+	//8-bit
+	UCSR1C |= (1<<UCSZ11) | (1<<UCSZ10);
+  c2:	80 81       	ld	r24, Z
+  c4:	86 60       	ori	r24, 0x06	; 6
+  c6:	80 83       	st	Z, r24
+  c8:	08 95       	ret
+
+000000ca <transmit>:
+}
+
+void transmit(uint8_t c)
+{
+	while(!(UCSR1A & (1<<UDRE1)));
+  ca:	eb e9       	ldi	r30, 0x9B	; 155
+  cc:	f0 e0       	ldi	r31, 0x00	; 0
+  ce:	90 81       	ld	r25, Z
+  d0:	95 ff       	sbrs	r25, 5
+  d2:	fd cf       	rjmp	.-6      	; 0xce <transmit+0x4>
+	UDR1 = c;
+  d4:	80 93 9c 00 	sts	0x009C, r24	; 0x80009c <__TEXT_REGION_LENGTH__+0x7e009c>
+  d8:	08 95       	ret
+
+000000da <receive>:
+}
+
+uint8_t receive()
+{
+	while(!(UCSR1A & (1<<RXC)));
+  da:	eb e9       	ldi	r30, 0x9B	; 155
+  dc:	f0 e0       	ldi	r31, 0x00	; 0
+  de:	80 81       	ld	r24, Z
+  e0:	88 23       	and	r24, r24
+  e2:	ec f7       	brge	.-6      	; 0xde <receive+0x4>
+	return UDR1;
+  e4:	80 91 9c 00 	lds	r24, 0x009C	; 0x80009c <__TEXT_REGION_LENGTH__+0x7e009c>
+  e8:	08 95       	ret
+
+000000ea <main>:
+uint8_t receive();
+
+
+int main(void)
+{
+	uartInit();
+  ea:	0e 94 52 00 	call	0xa4	; 0xa4 <uartInit>
+	uint8_t ch;
+	DDRD = 0xFF;
+  ee:	8f ef       	ldi	r24, 0xFF	; 255
+  f0:	81 bb       	out	0x11, r24	; 17
+	PORTC = 0xFF;
+  f2:	85 bb       	out	0x15, r24	; 21
+	transmit('A');
+  f4:	81 e4       	ldi	r24, 0x41	; 65
+  f6:	0e 94 65 00 	call	0xca	; 0xca <transmit>
+	transmit('\n');
+  fa:	8a e0       	ldi	r24, 0x0A	; 10
+  fc:	0e 94 65 00 	call	0xca	; 0xca <transmit>
+    /* Replace with your application code */
+    while (1) 
+    {
+		ch = receive();
+ 100:	0e 94 6d 00 	call	0xda	; 0xda <receive>
+ 104:	c8 2f       	mov	r28, r24
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 106:	2f ef       	ldi	r18, 0xFF	; 255
+ 108:	83 ec       	ldi	r24, 0xC3	; 195
+ 10a:	99 e0       	ldi	r25, 0x09	; 9
+ 10c:	21 50       	subi	r18, 0x01	; 1
+ 10e:	80 40       	sbci	r24, 0x00	; 0
+ 110:	90 40       	sbci	r25, 0x00	; 0
+ 112:	e1 f7       	brne	.-8      	; 0x10c <main+0x22>
+ 114:	00 c0       	rjmp	.+0      	; 0x116 <main+0x2c>
+ 116:	00 00       	nop
+		_delay_ms(200);
+		transmit(ch);
+ 118:	8c 2f       	mov	r24, r28
+ 11a:	0e 94 65 00 	call	0xca	; 0xca <transmit>
+		PORTC = ch;
+ 11e:	c5 bb       	out	0x15, r28	; 21
+ 120:	ef cf       	rjmp	.-34     	; 0x100 <main+0x16>
+
+00000122 <_exit>:
+ 122:	f8 94       	cli
+
+00000124 <__stop_program>:
+ 124:	ff cf       	rjmp	.-2      	; 0x124 <__stop_program>

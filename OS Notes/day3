@@ -1,0 +1,582 @@
+- in this context of discussions, we will be understanding 
+how the OS services use low-level processor services and
+provide the final set of services 
+
+- in the case of a system call API, it invokes 
+a machine instruction and this leads to following 
+set of actions : 
+- some of the current hw context is saved, 
+in hw (+ in the sw ??)
+
+- in addition, there is an implicit processor 
+mode switch, from user-privilege to 
+system-privilege - this is triggered, by 
+the machine instruction - some cpu 
+registers are affected
+
+- as part of processing this trap instruction,
+a jump is effective, which loads the address
+of the corresponding system call handler - 
+this system call handler needs to implemented, 
+as per OS design ???
+
+- in a typical OS implementation, the system call 
+handler must access appropriate system call 
+table, for accessing the corresponding 
+system service routine and complete the 
+service
+
+- once the system call handler completes, 
+it is expected to return, using an interrupt 
+return technique of the hw architecture 
+
+- once this is done, the saved hw context of 
+the current process is extracted and 
+loaded into the processor, which will 
+resume the process, in the user-space 
+to continue ?? after the above processing, 
+the processor mode is again switched 
+back to user-mode/less privileged mode  
+
+- in the following discussions, we will be referring 
+to chapter 5 of Charles Crowley :
+- we will be understanding an implementation of
+system call handler, timer routine, 
+scheduler, and their interlinking 
+- as per this reference and GPOS systems, 
+the first process is created, by the 
+kernel/CORE of the OS - this first process
+is the one,which loads/launches other 
+processes, based on the OS configuration
+and set-up - as part of this job, it will 
+invoke one or more process management system 
+call APIs and create new processes
+- as part of this set-up, any other process is 
+also created, using one or more system call 
+APIs of the process managememt  
+
+
+- as part of the next discussion, we will start, 
+with 
+"system call handler and system service routines" ??      
+- let us assume, that an existing process 
+invokes a system call API, for a new 
+process creation - most of the comments 
+below are same, for other system call APIs, 
+with some difference - meaning, the basic 
+principles remain the same, but details 
+will change ??
+
+-  there is an explicit saving of hw context 
+in the pd or related objects of a process
+-  there is an explicit switching of processor 
+stack pointer - the stack pointer will be  
+forced to point to a system stack
+- in a typical OS platform, let us assume, that 
+there is a dedicated stack memory region 
+for user-space execution and another dedicated stack 
+memory region for the system space memory 
+region 
+- every system call API passes parameters to 
+the system - one such parameter is system 
+call no. 
+
+- based on this system call no., the system call 
+handler will invoke appropriate service 
+routine of the kernel /components 
+- in this case, let us assume, that it is a 
+process creation system call API and corresponding 
+service routine is invoked ???
+- as part of the process creation service 
+routine, following are done: 
+- allocate a free pd 
+- initialize pd's fields 
+- allocate physical memory and initialize
+the related details, in the pd 
+- initialize certain hw context 
+fields of the pd, like the 
+program counter, stack pointer, 
+control register - this control 
+register will contain value,for 
+setting the processor mode, for 
+user-mode
+- the above hw context will be used, 
+when this process will be scheduled
+and dispatched, in the future 
+- once a process/pd is successfully 
+set-up, the pd is added to Rq/ready-state   
+
+- once the service routine completes, 
+it will return to the system call
+handler 
+
+- once the above processing is done, the 
+control of the system call handler is 
+passed to scheduler of the system 
+
+- in this context, let us assume that 
+the scheduler is divided into 2 
+parts - one is the policy , which 
+is time-slicing/RR 
+
+- the second part of the scheduler will 
+be the actual dispatcher - it will 
+load the low-level hw context of the 
+process/pd into the processor
+
+- the policy part will check the 
+current time-slice field of the 
+process and if it is non-zero, 
+continue the current process, after 
+the system call API 
+
+- however, if the time-slice field is 
+expired, the current process will be 
+preempted and another process will 
+be selected
+
+- manipulation of the time-slice field 
+of processes is done, by timer ISR, 
+whenever there are timer int events     
+
+- for a selected process/pd, the hw context 
+contents are loaded into the processor and 
+at the end of the scheduler, a typical 
+return from interrupt action is taken
+
+- in the common scenario, the current process
+will be resumed, after a process creation 
+system call API - scheduler will select 
+the same process and dispatch, using 
+the saved hw context of the current process ??
+
+- the newly created process will be ready and 
+will be dispatched, in the future, when it 
+is eligible ??
+
+- in this model, let assume, that logical 
+address-space is used, based on the 
+logical addresses of the processor - 
+this processor supports logical addresses 
+and in addition, supports a simple translation, 
+using a base register and a bound register 
+- refer to lecture diagrams ??
+
+i    - let us understand the hw and sw memory models 
+, in this system : 
+- the processor supports logical addresses 
+and logical registers 
+- the processor supports a base register and 
+length register - for translation
+- the programs and their processes are assigned 
+logical addresses - uses logical addresses 
+and OS is managing logical address space and 
+addresses  
+
+- during process creation, the hw context is 
+initialized , with logical addresses 
+- in addition, base and bound register values
+are initialized, when the process is created
+- when this process is scheduled and dispatched, 
+the logical addresses and base/bound values 
+are loaded, from the pd into the processor 
+registers 
+
+- during run-time, based on the above registers
+and their values, translation is done, from 
+logical to physical addresses 
+
+- the program's contents are typically loaded
+into the physical memory block defined, by 
+base register and bound register, for this 
+process 
+
+- the above set-up is done, for each process, 
+separately - meaning, whenever a process 
+is scheduled and dispatched, the corresponding 
+logical addresses/base register value/
+bound register value will be loaded into 
+the processor - each pd maintains the 
+hw context details of the respective 
+process 
+
+i  - visualize several active processes and their 
+corresponding physical memory mappings/memory 
+blocks, in the system ???
+
+i  - in this set-up, let us assume the logical 
+address-space scope is the same, for each 
+process, as per the hw model 
+
+- based on the same scope, each process is 
+assigned its own logical address-space 
+
+- what do you understand, based on the above 
+set-up ???
+- based on the above set-up, when a 
+process is scheduled and dispatched, 
+the corresponding logical addresses
+of the process are mapped/translated
+to corresponding physical memory 
+blocks/adddresses, using appropriate
+translation registers of the process
+- bi / li of pi 
+
+note : we will come across more complex 
+hw memory models and sw memory models, 
+during memory management
+note : in addition, based on embedded hw and
+sw platforms, we may come accross 
+other memory models
+note : in all the above cases, basic principles
+are the same    
+
+ii     -   - let us assume that a process is scheduled 
+and dispatched to the processor - it has been 
+assigned a time-quantum, because of time-slicing 
+- as per this system, the timer int is generated
+, after every one time-quantum/100msecs(or 
+another value)
+
+-based on the above set-up, when a timer int. 
+event is generated,timer ISR will be processed
+- as part of the timer ISR processing, 
+time-slice field of the current process
+/pd will be manipulated 
+- the time-slice field is set to 0 
+- as per the design, scheduler is 
+invoked, at the end of the timer 
+ISR 
+- as per the policy, if the time-slice 
+field is set to 0, the current process
+will be preempted and another process
+will be selected and dispatched 
+
+- the model used, in chapter 5 is a minimal 
+model, due to the following reasons :
+- hw interrupts are enabled, in user-mode
+/space 
+- hw interrupts are disabled, in system-mode
+/space
+- due to these limitations, user-space 
+preemptions are allowed, not system-space
+preemptions ??
+- in this model, hw context is saved, in the 
+pd and there is room, for only one 
+instance of hw context - if we need to save 
+2 or more instances of hw context, it is 
+disallowed 
+- there are multiple user-space stacks, for 
+supporting multiple processes, but there 
+is a single systems-space stack
+- since there is a single system-space 
+stack, blocking operations are not 
+supported, in system calls / system call 
+APIs ??/
+
+- let us understand user-space preemption 
+and system-space preemption ??/
+
+- let us see certain diagrams ??
+- if a process is executing, in the user-space 
+and there is an event(possibly, an int. 
+event), if there is a preemption and 
+rescheduling, such a preemption is 
+known as user-space preemption 
+- if a process is executing a system call, 
+in the system-space,if there is an 
+event, which leads to preemption and
+rescheduling,such a preemption is known 
+as kernel preemption/kernel-space 
+preemption 
+- different operating system platforms 
+have different supports, for 
+user-space and system-space 
+preemptions - we will understand more, 
+in the upcoming discussions   
+
+- in these discussions, hw int. priorities
+will be treated higher than OS scheduling 
+priorities - these rules are true, for 
+any OS platform or other sw platforms - 
+embedded platform rules are always 
+respected 
+
+- whenver a process is interrupted or 
+preempted or blocked, the current hw 
+context of the process/processor will 
+be saved, in the pd or related objects, 
+such that the saved hw context will be 
+used to resume the process, from the 
+correct point of execution - this set-up
+ensures, that a preempted process will       
+be resumed correctly, in its code/data
+, without any run-time corruption - 
+this will ensure that multitasking will 
+take are saving hw contexts of processes 
+and restoring hw contexts of processes ??  
+- in addition, pd and its nested objects 
+will ensure, that other sw contexts are 
+also saved and resumed, during preemptions 
+- such actions are commonly taken, in 
+system call handlers, ISRs, and scheduler's 
+dispatcher ?? refer to Crowley, for low-level 
+understanding of the details 
+
+- in any OS/EOS/rtoS, several system call APIs
+/system APIs are supported - in addition, 
+as part of the system call API, implicitly, 
+system call nos. are assigned and hard-coded
+- these system call nos. are passed to the system, 
+when the corresponding system call API is 
+invoked - internally, based on these numbers, 
+system call HANDLER will invoke corresponding 
+system service routines ???
+
+- in all these scenarios,OS CORE code will be 
+resident, in the system, but may not execute, 
+until events are triggered - once events are 
+triggered, these handlers/ISRs are invoked 
+and processed - OS core code is passively 
+resident most of the life-time of the system     
+
+- there is a pd table/list, in the system - 
+this table/list will contain free/used 
+pds - when a process is created, a free
+pd is allocated to the specific process 
+and initialized - this will be associated
+with the process, until its termination 
+and clean-up - once terminated/cleaned-up, 
+pd will be freed to the system         
+
+- since hw interrupts are disabled, in system-
+space and there is only one hw context 
+save area, in the pd, in this model, 
+user-space preemption is supported, 
+but not system-space preemption 
+
+- first, understand chapter 5 model of 
+charles crowley - next, move on to 
+chapter 6 model of Charles Crowley, 
+where we have a more sophisticated 
+and realistic model 
+
+- let us summarize the key features of 
+this model : 
+
+- there is one dedicated kernel/system 
+stack per process 
+- this model allows multiple hw context 
+save areas, in the kernel stack - pd 
+no longer manages hw context save areas, 
+but the kernel stack does - kernel stack 
+is managed, by the pd 
+- hw interrupts are enabled, during 
+system call execution 
+- hw interrupts are disabled, during
+ISRs - meaning,nested ISRs are disallowed
+- in other OS platforms, there may be 
+support, for nested ISRs, if the design 
+is acceptable   
+- in additon, hw interrupts will be masked, 
+during critical code sections of the 
+kernel ??? executing scheduler code - 
+executing IO code, for a hw interface ??
+- based on the above set-up, in this model, 
+system-space preemption is supported and 
+allowed 
+- in this model, blocking of processes, in 
+system call APIs/system callS is allowed 
+
+- let us understand all these features, using 
+certain scenarios : 
+- in this model, let us assume,that a process
+is invoking a system call API and it 
+completes its processing and resumes the 
+same process
+- as part the system call processing, hw 
+context 1 is saved, in sa1 of the 
+kernel - after the system call processing, 
+the system call handler invokes the scheduler
+- the scheduler will resume the same 
+process, using sa1 stored, in the 
+kernel stack of this process 
+- hw context of sa1 is loaded into 
+the processor and the process resumes
+i      - in another scenario,let us assume, that 
+there is a system-space preemption ??    
+- the current process Pi invokes a 
+system call API, which will lead 
+to execution of system call 
+handler and syscall service routine 
+- system call handler will save sa1, 
+in the kernel stack of the current 
+process
+- this sa1 will be used to resume 
+the execution of this process, 
+in the user-space 
+- while the system call is executing, 
+in the system-space, if there is an
+int. event , another hw context 
+is saved, in sa2 of the kernel 
+stack of the current process- this 
+sa2 is needed to resume the kernel 
+space execution of the the current 
+process 
+- in addition, if these events lead to 
+a preemption, scheduler will be invoked
+and it will preempt the current process
+and schedule/dispatch another process, 
+in the Rq 
+- as part of scheduling and dispatching the 
+next process/pd,using save areas of the 
+kernel stackj of next process, Pj       
+
+- sometime, in the future, the preempted
+process will become eligible, for 
+scheduling and dispatching - the scheduler 
+will select the process and the dispatcher
+will use sa2 to dispatch/resume the  
+process - the process will resume its
+system space service routine and 
+complete it ??
+
+- after completing the service routine,
+system call handler completes and 
+control is passed to the scheduler 
+, again ?? 
+
+- the scheduler will continue the same 
+process, using sa1 and dispatching it 
+,again - at the end of this, the preempted 
+process will resume and continue its 
+user-space 
+execution ??//  
+
+i             - let us look, at another scenario, for 
+blocking and unblocking, using 
+system call APIs
+- for this discussion, 
+we will be using a message queue IPC
+mechanism :
+- two processes cannot interact with 
+each other, without support of an 
+IPC mechanism 
+- one such is a message queue - it has
+a system object, known as message 
+queue  object 
+- processes can access a message queue 
+object using system call APIs 
+- typically, one process will send 
+messages to the mq object and the 
+message will be copied and maintained
+, in a queue - mq object maintains 
+a set of messages, in a queue
+- a process can receive messages,from 
+the queue , using system call API - 
+if there is no message, the receiving
+process will be blocked, in the system 
+call - when a sending process sends a 
+message, using a system call API, 
+a message will be copied, as well as
+any blocked processes will be resumed
+- a mq object also maintains a waitqueue
+and a receiver process can be blocked, if 
+there is no message, in the queue 
+
+- as per the implementation details, 
+if there are no messages, in the 
+message queue and a receive message 
+system call API is invoked,the 
+current process will blocked, using 
+switchprocess() system routine - 
+as part of this system routine, 
+hw context/sa2 is saved, in the kernel 
+stack and scheduler is invoked - as 
+part of scheduler, it will select and 
+dispatch another eligible process/pd 
+from the Rq
+
+- what happens, if a another process 
+sends a message,using a system call API ???
+- the new message will be copied into 
+the message queue of the mq object 
+- in addition,the blocked receive message 
+is unblocked 
+- once unblocked, this process/pd will be 
+added to Rq 
+- some time in the future, this unblocked 
+process will be scheduled and dispatched
+- once scheduled, the unblocked process 
+will be resumed, using sa2 of the 
+kernel stack of the process
+- based on the sa2, the process will complete 
+its receive part and a message will be copied
+- once the system service routine is 
+completed, the system call handler is also 
+completed and control is passed to scheduler
+- now, scheduler will use sa1 to again 
+restore the hw context and resume the process, 
+in user-space 
+- in short, we have completed a cycle of blocking, 
+unblocking, scheduling/dispatching, processing, 
+and restoring the user-space execution of 
+of a process
+- based on the above discussions, 
+can we conclude the following :
+- are int. events allowed, in a 
+system call execution ??
+- are int. events allowed, in 
+an ISR ??
+- can we save multiple hw contexts, 
+in kernel stack ??? 
+
+- is system-space preemption allowed
+, in this model ???
+- is blocking inside a system call 
+execution allowed, in this model ??
+- based on all the above details, we will 
+be following chapter 6 model of 
+charles crowley, for many of our 
+discussions ?? 
+
+
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-      
+
+
+
+
+
+
+
+
+
