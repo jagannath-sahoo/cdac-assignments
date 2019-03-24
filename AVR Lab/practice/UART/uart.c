@@ -41,7 +41,6 @@ int main()
     //dataInt = 121;
     //sprintf(convertBuff,"%d",dataInt);
     sendString(convertBuff);
-    while(1){
         sendString("\r\nAVR CALCULATOR\r\n");
         sendString(" 1 = Addition\r\n 2 = Substractin\r\n 3 = Multiplication\r\n 4 = Division\r\n");
         ch = receiveChar();
